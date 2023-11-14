@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -12,18 +13,18 @@ class HomeController extends Controller
 {
     public function index()
     {
-        if (Auth::check()) {
-            $userType = Auth::user()->role;
-
-            if ($userType === 'user') {
-                return view('dashboard');
-            } elseif ($userType === 'admin') {
-                return view('admin.adminhome');
-            } else {
-                return redirect()->back();
-            }
+        if (in_array(auth()->user()->role, ['admin'])) {
+            return view('admin.adminhome');
         } else {
-            return view('auth.login'); // Redirect unauthenticated users to the login page
+            return view('dashboard');
         }
+        return redirect()->route('login');
+    }
+    public function input()
+    {
+        $user = Auth::user();
+        $documents = $user->documents;
+
+        return view('shared.input', compact('documents'));
     }
 }
