@@ -16,19 +16,18 @@
                         <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('documents.showAll')" :active="request()->routeIs('documents.showAll')">
+                        <x-nav-link :href="route('document.showAll')" :active="request()->routeIs('document.showAll')">
                             {{ __('Show') }}
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                             {{ __('Home') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('documents.input')" :active="request()->routeIs('documents.input')">
+                        <x-nav-link :href="route('document.input')" :active="request()->routeIs('document.input')">
                             {{ __('CRUD') }}
                         </x-nav-link>
                     @endif
                 </div>
-
             </div>
 
             <!-- Settings Dropdown -->

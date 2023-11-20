@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('ktp');
             $table->string('ijazah');
+            $table->string('nilai');
             $table->string('nilai_akhir');
             $table->timestamps();
         });

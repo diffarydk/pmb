@@ -6,14 +6,17 @@ use App\Models\Document;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
+
 
 class DocumentController extends Controller
 {
 
     public function index()
     {
-        $documents = Document::all(); // Retrieve all documents from the database
 
+        $documents = Document::all();
         return view('shared.show', compact('documents'));
     }
 
@@ -28,12 +31,15 @@ class DocumentController extends Controller
         // Validate the request data
         request()->validate([
             'nama' => 'required|string|max:255',
-            'no_telp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:12',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . Document::class],
-            'ktp' => 'required|numeric|digits_between:10,20|unique:documents',
-            'ijazah' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'nilai_akhir' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'no_telp' => 'required|numeric',
+            'email' => 'required|string|email|max:255|unique:documents',
+            'ktp' => 'required|numeric|digits:16|unique:documents',
+            'nilai' => 'required|min:2|max:5',
+            'ijazah' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nilai_akhir' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+
 
         $user = User::with('documents')->find(Auth::id());
 
@@ -52,13 +58,61 @@ class DocumentController extends Controller
             'no_telp' => request('no_telp'),
             'email' => request('email'),
             'ktp' => request('ktp'),
+            'nilai' => request('nilai'),
             'ijazah' => $ijazahPath,
             'nilai_akhir' => $nilaiAkhirPath,
         ]);
 
         return redirect()->route(
-            'documents.show',
+            'document.show',
             ['document' => $document]
         );
+    }
+
+    public function edit(Document $document)
+    {
+        $editing = true;
+        return view('shared.show', compact('document', 'editing'));
+    }
+
+    public function update()
+    {
+        request()->validate([
+            'nama' => 'required|string|max:255',
+            'no_telp' => 'required|numeric',
+            'email' => 'required|string|email|max:255|unique:documents',
+            'ktp' => 'required|numeric|digits:16|unique:documents',
+            'nilai' => 'required|min:2|max:5',
+            'ijazah' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nilai_akhir' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $ijazahPath = request()->file('ijazah')->store('ijazah', 'public');
+        $nilaiAkhirPath = request()->file('nilai_akhir')->store('nilai_akhir', 'public');
+
+        // Create a new Document instance with user information
+        $document = Document::create([
+            'user_id' => Auth::id(),
+            'nama' => request('nama'),
+            'no_telp' => request('no_telp'),
+            'email' => request('email'),
+            'ktp' => request('ktp'),
+            'nilai' => request('nilai'),
+            'ijazah' => $ijazahPath,
+            'nilai_akhir' => $nilaiAkhirPath,
+        ]);
+        $document->save();
+        return view('/');
+    }
+
+    public function delete(Document $document)
+    {
+        Storage::disk('public')->delete($document->ijazah);
+        Storage::disk('public')->delete($document->nilai_akhir);
+
+        $document->delete();
+
+
+        return redirect()->route('document.showAll');
     }
 }

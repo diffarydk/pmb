@@ -17,6 +17,7 @@ class Document extends Model
         'no_telp',
         'email',
         'ktp',
+        'nilai',
         'ijazah',
         'nilai_akhir',
     ];
