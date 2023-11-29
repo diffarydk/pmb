@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Session;
 
 
 class DocumentController extends Controller
@@ -72,39 +71,54 @@ class DocumentController extends Controller
     public function edit(Document $document)
     {
         $editing = true;
-        $documents = Document::all(); // Fetch all documents or use any other criteria
-        return view('shared.show', compact('document', 'editing', 'documents'));
+        $documents = Document::all();
+        return view('shared.update', compact('document', 'editing', 'documents'));
     }
 
-    public function update()
+    public function update(Document $document)
     {
-        request()->validate([
-            'nama' => 'required|string|max:255',
-            'no_telp' => 'required|numeric',
-            'email' => 'required|string|email|max:255|unique:documents',
-            'ktp' => 'required|numeric|digits:16|unique:documents',
-            'nilai' => 'required|min:2|max:5',
-            'ijazah' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'nilai_akhir' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            request()->validate([
+                'nama' => 'required|string|max:255',
+                'no_telp' => 'required|numeric',
+                'email' => 'required|string|email|max:255',
+                'ktp' => 'required|numeric|digits:16',
+                'nilai' => 'required|min:2|max:5',
+                'ijazah' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'nilai_akhir' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
-        $ijazahPath = request()->file('ijazah')->store('ijazah', 'public');
-        $nilaiAkhirPath = request()->file('nilai_akhir')->store('nilai_akhir', 'public');
+            // Update existing document attributes
+            $document->nama = request('nama');
+            $document->no_telp = request('no_telp');
+            $document->email = request('email');
+            $document->ktp = request('ktp');
+            $document->nilai = request('nilai');
 
-        // Create a new Document instance with user information
-        $document = Document::create([
-            'user_id' => Auth::id(),
-            'nama' => request('nama'),
-            'no_telp' => request('no_telp'),
-            'email' => request('email'),
-            'ktp' => request('ktp'),
-            'nilai' => request('nilai'),
-            'ijazah' => $ijazahPath,
-            'nilai_akhir' => $nilaiAkhirPath,
-        ]);
-        $document->save();
-        return view('/');
+            // Update or store new files
+            if (request()->hasFile('ijazah')) {
+                $ijazahPath = request()->file('ijazah')->store('public/ijazah');
+                $document->ijazah = $ijazahPath;
+            }
+
+            if (request()->hasFile('nilai_akhir')) {
+                $nilaiAkhirPath = request()->file('nilai_akhir')->store('public/nilai_akhir');
+                $document->nilai_akhir = $nilaiAkhirPath;
+            }
+
+            $document->save();
+            if (Auth::user()->role === 'admin') {
+
+                return redirect()->route('document.showAll');
+            } else{
+                return redirect()->route('document.input');
+            };
+        } catch (\Exception $e) {
+            // Log or display the exception message
+            dd($e->getMessage());
+        }
     }
+
 
     public function delete(Document $document)
     {
@@ -152,5 +166,4 @@ class DocumentController extends Controller
         dd($documents);
         return view('component.cardpengumuman', compact('documents'));
     }
-
 }

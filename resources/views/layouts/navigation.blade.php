@@ -27,7 +27,7 @@
                             {{ __('Home') }}
                         </x-nav-link>
                         <x-nav-link :href="route('document.input')" :active="request()->routeIs('document.input')">
-                            {{ __('CRUD') }}
+                            {{ __('Pendfataran') }}
                         </x-nav-link>
                     @endif
                 </div>
