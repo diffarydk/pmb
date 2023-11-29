@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/selection', function () {
+    return view('shared.selection');
+})->name('selection');
 
 Route::group(['middleware' => ['auth', 'disablebackbtn']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -35,6 +38,8 @@ Route::group(['middleware' => ['auth', 'disablebackbtn']], function () {
     Route::middleware('admin')->group(
         function () {
             Route::get('/all', [DocumentController::class, 'index'])->name('document.showAll');
+            Route::get('/selection', [DocumentController::class, 'selection'])->name('document.selection');
+            Route::match(['put', 'post'], '/selection/update', [DocumentController::class, 'updateSelection'])->name('selection.update');
             Route::delete('/all/{document}', [DocumentController::class, 'delete'])->name('document.delete');
         }
     );

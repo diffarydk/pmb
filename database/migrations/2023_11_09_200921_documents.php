@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('ijazah');
             $table->string('nilai');
             $table->string('nilai_akhir');
+            $table->enum('status', ['dalam proses', 'diterima', 'ditolak'])->default('dalam proses');
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 
@@ -114,5 +115,35 @@ class DocumentController extends Controller
 
 
         return redirect()->route('document.showAll');
+    }
+
+    public function selection()
+    {
+        $topN = 0;
+        $documents = Document::orderByRaw('CAST(nilai AS SIGNED) DESC')->get();
+        return view('shared.selection', compact('documents', 'topN'));
+    }
+
+    public function updateSelection(Request $request)
+    {
+        // Retrieve the topN value and cast it to an integer
+        $topN = (int) $request->input('topN');
+
+        // Update the status of top N documents to 'diterima'
+        DB::table('documents')
+            ->join(DB::raw("(SELECT nilai FROM documents ORDER BY CAST(nilai AS SIGNED) DESC LIMIT $topN) as top_n"), function ($join) {
+                $join->on('documents.nilai', '=', 'top_n.nilai');
+            })
+            ->update(['status' => 'diterima']);
+
+        // Update the status of remaining documents to 'ditolak'
+        DB::table('documents')
+            ->where('status', '<>', 'diterima') // Only update documents not marked as 'diterima'
+            ->update(['status' => 'ditolak']);
+
+        // Fetch all documents for the view
+        $documents = Document::orderByRaw('CAST(nilai AS SIGNED) DESC')->get();
+
+        return view('shared.selection', compact('documents', 'topN'));
     }
 }

@@ -26,6 +26,7 @@ class DocumentFactory extends Factory
             'no_telp' => fake()->numerify('############'), // 12-digit random number
             'email' => fake()->unique()->safeEmail(),
             'ktp' => fake()->numerify('################'),
+            'nilai' => fake()->numberBetween(1, 100),
             'ijazah' => $ijazahPath,
             'nilai_akhir' => $nilaiAkhirPath,
         ];

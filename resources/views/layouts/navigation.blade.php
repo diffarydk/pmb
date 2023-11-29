@@ -19,6 +19,9 @@
                         <x-nav-link :href="route('document.showAll')" :active="request()->routeIs('document.showAll')">
                             {{ __('Show') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('document.selection')" :active="request()->routeIs('document.selection')">
+                            {{ __('Seleksi') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                             {{ __('Home') }}
@@ -55,7 +58,7 @@
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                      <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
                             <x-dropdown-link :href="route('logout')"
@@ -63,7 +66,7 @@
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
-                        </form>
+                        </form>  
                     </x-slot>
                 </x-dropdown>
             </div>

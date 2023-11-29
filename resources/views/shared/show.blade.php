@@ -3,8 +3,12 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Show Data') }}
         </h2>
+
     </x-slot>
     <div class="py-12 px-12">
+        @if (Auth::user()->role === 'admin')
+            @include('shared.search_bar')
+        @endif
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -116,9 +120,10 @@
                                 </button>
                             </td>
                             <td>
-                            <button href="#" data-modal-target="authentication-modal"
-                                data-modal-toggle="{{ session('modal', '') }}" data-document-id="{{ $document->id }}"
-                                class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit</button>
+                                <button href="#" data-modal-target="authentication-modal"
+                                    data-modal-toggle="{{ session('modal', '') }}"
+                                    data-document-id="{{ $document->id }}"
+                                    class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit</button>
                             </td>
                         </tr>
                     @endif
@@ -148,65 +153,65 @@
         <x-slot name=header>
             Update
         </x-slot name=header>
-            @if ($editing ?? false)
-                <form class="space-y-4" action="{{ route('document.update', $document->id) }}" method="POST">
-                    @csrf
-                    @method('put')
-                    <div>
-                        <label for="Nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Nama</label>
-                        <input type="text" name="nama" id="nama"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="Perbarui Nama Anda" required>
-                    </div>
-                    <div>
-                        <label for="no_telp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Nomer Telepon</label>
-                        <input type="no_telp" name="no_telp" id="no_telp" placeholder="Perbarui Nomer Telpon Anda"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
-                    </div>
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Email</label>
-                        <input type="email" name="email" id="email" placeholder="Perbarui Email Anda"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
-                    </div>
-                    <div>
-                        <label for="ktp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            KTP</label>
-                        <input type="text" name="ktp" id="ktp"
-                            placeholder="Perbarui Nomer Kependudukan Anda"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
-                    </div>
-                    <div>
-                        <label for="nilai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Nilai</label>
-                        <input type="text" name="nilai" id="nilai" placeholder="Perbarui Nilai Anda"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
-                    </div>
-                    <div>
-                        <label for="ijazah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Ijazah</label>
-                        <input type="file" name="ijazah" id="ijazah" placeholder="Perbarui foto Ijazah Anda"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
-                    </div>
-                    <div>
-                        <label for="nilai_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Bukti Nilai</label>
-                        <input type="file" name="nilai_akhir" id="nilai_akhir"
-                            placeholder="Perbarui Foto Bukti Nilai"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required>
-                    </div>
-                    <button type="submit"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kirim</button>
-                </form>
-            @endif
+        @if ($editing ?? false)
+            <form class="space-y-4" action="{{ route('document.update', $document->id) }}" method="POST">
+                @csrf
+                @method('put')
+                <div>
+                    <label for="Nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Nama</label>
+                    <input type="text" name="nama" id="nama"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        placeholder="Perbarui Nama Anda" required>
+                </div>
+                <div>
+                    <label for="no_telp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Nomer Telepon</label>
+                    <input type="no_telp" name="no_telp" id="no_telp" placeholder="Perbarui Nomer Telpon Anda"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Email</label>
+                    <input type="email" name="email" id="email" placeholder="Perbarui Email Anda"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <label for="ktp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        KTP</label>
+                    <input type="text" name="ktp" id="ktp"
+                        placeholder="Perbarui Nomer Kependudukan Anda"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <label for="nilai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Nilai</label>
+                    <input type="text" name="nilai" id="nilai" placeholder="Perbarui Nilai Anda"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <label for="ijazah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Ijazah</label>
+                    <input type="file" name="ijazah" id="ijazah" placeholder="Perbarui foto Ijazah Anda"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <div>
+                    <label for="nilai_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Bukti Nilai</label>
+                    <input type="file" name="nilai_akhir" id="nilai_akhir"
+                        placeholder="Perbarui Foto Bukti Nilai"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required>
+                </div>
+                <button type="submit"
+                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kirim</button>
+            </form>
+        @endif
     </x-modalform>
     <x-modalphoto />
 </x-app-layout>
