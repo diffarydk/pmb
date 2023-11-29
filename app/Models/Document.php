@@ -11,16 +11,17 @@ class Document extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $fillable = [
-        'user_id',
-        'nama',
-        'no_telp',
-        'email',
-        'ktp',
-        'nilai',
-        'ijazah',
-        'nilai_akhir',
-    ];
+        protected $fillable = [
+            'user_id',
+            'nama',
+            'no_telp',
+            'email',
+            'ktp',
+            'nilai',
+            'ijazah',
+            'nilai_akhir',
+            'status',
+        ];
 
     // Define the relationship with the User model
     public function user()

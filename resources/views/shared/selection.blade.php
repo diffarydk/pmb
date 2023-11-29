@@ -6,18 +6,18 @@
     </x-slot>
     <div class="py-12 px-12">
         <div class="mt-0 mb-2">
-                @if (Auth::user()->role === 'admin')
-                    <form action="{{ route('selection.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <label for="topN" class="mr-2">Top N:</label>
-                        <input type="number" name="topN" value="{{ $topN }}" class="mr-4">
-                        <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded-lg">
-                            Seleksi
-                        </button>
-                    </form>
-                @endif
-            </div>
+            @if (Auth::user()->role === 'admin')
+                <form action="{{ route('selection.update') }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <label for="topN" class=" text-white px-4 py-2 rounded-lg">Kuota Seleksi:</label>
+                    <input type="number" name="topN" value="{{ $topN }}" class="mr-4">
+                    <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        Seleksi
+                    </button>
+                </form>
+            @endif
+        </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -62,4 +62,22 @@
             </table>
         </div>
     </div>
+    <div id="dropdown"
+        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-full left-0 mt-2">
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <li>
+                <a href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+            </li>
+            <li>
+                <a href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+            </li>
+            <li>
+                <a href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+            </li>
+        </ul>
+    </div>
+
 </x-app-layout>

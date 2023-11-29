@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -23,8 +24,22 @@ class HomeController extends Controller
     public function input()
     {
         $user = Auth::user();
-        $documents = $user->documents;
+        $documents = $user->documents ?? collect();
 
-        return view('shared.input', compact('documents'));
+        return view('shared.input', compact('documents', 'user'));
+    }
+
+    public function search(Request $request)
+    {
+        // menangkap data pencarian
+        $cari = $request->input('search');
+
+        // mengambil data dari table pegawai sesuai pencarian data
+        $documents = DB::table('documents')
+            ->where('nama', 'like', "%" . $cari . "%")
+            ->paginate();
+
+        // mengirim data documents ke view show
+        return view('shared.show', ['documents' => $documents]);
     }
 }

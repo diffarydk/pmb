@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth', 'disablebackbtn']], function () {
             Route::get('/selection', [DocumentController::class, 'selection'])->name('document.selection');
             Route::match(['put', 'post'], '/selection/update', [DocumentController::class, 'updateSelection'])->name('selection.update');
             Route::delete('/all/{document}', [DocumentController::class, 'delete'])->name('document.delete');
+            Route::get('/all/show', [HomeController::class, 'search'])->name('document.search');
         }
     );
 });

@@ -16,7 +16,6 @@ class DocumentController extends Controller
 
     public function index()
     {
-
         $documents = Document::all();
         return view('shared.show', compact('documents'));
     }
@@ -73,7 +72,8 @@ class DocumentController extends Controller
     public function edit(Document $document)
     {
         $editing = true;
-        return view('shared.show', compact('document', 'editing'));
+        $documents = Document::all(); // Fetch all documents or use any other criteria
+        return view('shared.show', compact('document', 'editing', 'documents'));
     }
 
     public function update()
@@ -146,4 +146,11 @@ class DocumentController extends Controller
 
         return view('shared.selection', compact('documents', 'topN'));
     }
+    public function pengumuman()
+    {
+        $documents = Document::all(); // Fetch all columns
+        dd($documents);
+        return view('component.cardpengumuman', compact('documents'));
+    }
+
 }
